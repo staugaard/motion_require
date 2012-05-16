@@ -4,8 +4,8 @@ module MotionRequire
   class DependencyBuilder
     def self.build(app, load_paths = ['app', 'vendor'])
       builder = new(app, load_paths)
-      app.files_dependencies(builder.dependencies)
       app.files = [File.join(File.dirname(__FILE__), 'require.rb')] + builder.file_list
+      app.files_dependencies(builder.dependencies)
     end
 
     def initialize(app, load_paths)
