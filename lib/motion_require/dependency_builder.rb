@@ -5,12 +5,12 @@ module MotionRequire
     def self.build(app, load_paths = ['app', 'vendor'])
       builder = new(app, load_paths)
       app.files = [File.join(File.dirname(__FILE__), 'require.rb')] + builder.file_list
-      app.files_dependencies(builder.dependencies)
+      # app.files_dependencies(builder.dependencies)
     end
 
     def initialize(app, load_paths)
       @app = app
-      @load_paths = load_paths
+      @load_paths = load_paths.map { |path| File.join(@app.project_dir, path) }
       @dependencies = {}
       @file_list = []
       @resolved = false
@@ -49,10 +49,11 @@ module MotionRequire
     end
 
     def find_file(file)
-      @load_paths.each do |path|
-        file_name = File.join(@app.project_dir, path, file + '.rb')
+      (@load_paths + $:).each do |path|
+        file_name = File.join(path, file + '.rb')
         return file_name if File.exist?(file_name)
       end
+
       raise LoadError.new("cannot load such file -- #{file}")
     end
 
