@@ -63,8 +63,8 @@ module MotionRequire
       file = File.new(file_name, 'r')
 
       file.each_line do |line|
-        if match = line.match(/^\s*require '([^']+)'\s*$/)
-          deps << match[1]
+        if match = line.match(/^\s*require ([\"'])([^']+)\1\s*$/)
+          deps << match[2]
         end
       end
 
