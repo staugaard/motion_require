@@ -30,18 +30,35 @@ module MotionRequire
 
     def resolve
       return if @resolved
-      add_dependencies_for_file(find_file('app_delegate'))
+      app_delegate = find_file('app_delegate')
+
+      add_dependencies_for_file(app_delegate)
+
+      @file_list = load_order_for(app_delegate)
+
       @resolved = true
     end
 
-    def add_dependencies_for_file(file_name)
-      return if @file_list.member?(file_name)
+    def load_order_for(file_name)
+      deps = @dependencies[file_name]
 
+      if deps && !deps.empty?
+        deps.inject([file_name]) do |memo, dep_file_name|
+          if memo.include?(dep_file_name)
+            memo
+          else
+            load_order_for(dep_file_name) + memo
+          end
+        end
+      else
+        [file_name]
+      end
+    end
+
+    def add_dependencies_for_file(file_name)
       deps = dependencies_for_file(file_name)
 
       @dependencies[file_name] = deps unless deps.empty?
-
-      @file_list.unshift(file_name)
 
       deps.each do |file|
         add_dependencies_for_file(file)
