@@ -1,10 +1,11 @@
-# MotionRequire
+# motion_require
 
-TODO: Write a gem description
+Allows you to use `require` in your RubyMotion apps just like you are used to. This allows you to use gems like you normally do and manage your
+dependencies with Bundler.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Use bundler like you normally do when writing your Ruby apps, and add this line to your application's Gemfile:
 
     gem 'motion_require'
 
@@ -12,13 +13,28 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
+Then require it in your Rakefile by adding this line somewhere at the top:
 
-    $ gem install motion_require
+    require 'motion_require'
+
+So your Rakefile will look something like this:
+
+```ruby
+require "bundler/setup"
+
+$:.unshift('/Library/RubyMotion/lib')
+require 'motion/project'
+require 'motion_require'
+
+Motion::Project::App.setup do |app|
+  app.name = 'KillerApp'
+end
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+Now you can use require in your application to specify the dependencies without having to maintain the compliation order in you Rakefile.
+You can even require files from gems that are in you Gemfile.
 
 ## Contributing
 
